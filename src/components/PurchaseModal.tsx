@@ -410,8 +410,8 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
         {/* Split View for Reposição */}
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row bg-slate-50">
           {/* Left Pane: Alertas de Estoque */}
-          <div className={`w-full lg:w-[35%] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col lg:h-full shrink-0 ${
-            mobilePane === 'alerts' ? 'flex-1' : 'hidden lg:flex'
+          <div className={`w-full lg:w-[35%] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex-col lg:h-full shrink-0 ${
+            mobilePane === 'alerts' ? 'flex flex-1' : 'hidden lg:flex'
           }`}>
               <div className="p-4 border-b border-slate-100 flex flex-col gap-4 bg-slate-50/50">
                 <div className="flex items-center justify-between">
@@ -448,7 +448,7 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-3 relative bg-slate-50/30">
+              <div className="flex-1 overflow-y-auto p-4 grid grid-cols-2 lg:grid-cols-1 gap-3 content-start relative bg-slate-50/30">
                 {filteredAlerts.length === 0 ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <div className="w-12 h-12 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mb-3">
@@ -525,7 +525,7 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
                               }}
                             ></div>
                           </div>
-                          <div className="flex justify-between text-[10px] text-slate-400 font-medium">
+                          <div className="flex flex-wrap justify-between gap-x-2 gap-y-1 text-[10px] text-slate-400 font-medium">
                             <span title="Estoque mínimo configurado">
                               Meta(Mín): {ing.minStock} {ing.unit}
                             </span>
@@ -566,8 +566,8 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
             </div>
 
             {/* Right Pane: Carrinho da Compra Atual */}
-            <div className={`w-full lg:w-[65%] flex flex-col lg:h-full relative shrink-0 ${
-              mobilePane === 'cart' ? 'flex-1' : 'hidden lg:flex'
+            <div className={`w-full lg:w-[65%] flex-col lg:h-full relative shrink-0 ${
+              mobilePane === 'cart' ? 'flex flex-1' : 'hidden lg:flex'
             }`}>
               <div className="p-4 sm:p-6 overflow-y-auto flex-1">
                 {/* Metadata */}

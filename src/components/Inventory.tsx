@@ -475,7 +475,7 @@ export default function Inventory() {
                 </button>
 
                 {isExpanded && (
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2 content-start">
                     {items.map(item => {
                       const isLow = item.currentStock <= item.minStock;
                       const expiry = item.expiryDate ? new Date(item.expiryDate) : null;
@@ -484,7 +484,7 @@ export default function Inventory() {
 
                       return (
                         <div key={item.id} className={cn(
-                          "bg-white border rounded-xl p-3.5 shadow-sm relative overflow-hidden",
+                          "bg-white border rounded-xl p-3 shadow-sm relative overflow-hidden flex flex-col justify-between",
                           isLow ? "border-amber-200" : "border-slate-200"
                         )}>
                           {/* Colored left bar */}
@@ -493,73 +493,75 @@ export default function Inventory() {
                             isLow ? "bg-amber-400" : "bg-emerald-400"
                           )} />
 
-                          {/* Top row: Name + Status */}
-                          <div className="flex justify-between items-start mb-3 pl-2">
-                            <div className="flex-1 min-w-0 pr-2">
-                              <h4 className="font-bold text-slate-800 text-sm leading-tight truncate">{item.name}</h4>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                <span className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-[9px] font-black tracking-widest uppercase">{item.unit}</span>
-                                <span className="text-[9px] text-slate-400 font-medium">Atu: {new Date(item.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                          <div>
+                            {/* Top row: Name + Status */}
+                            <div className="flex flex-wrap justify-between items-start gap-1 mb-2 pl-2">
+                              <div className="flex-1 min-w-0 pr-1">
+                                <h4 className="font-bold text-slate-800 text-xs sm:text-sm leading-tight truncate" title={item.name}>{item.name}</h4>
+                                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-0.5">
+                                  <span className="bg-slate-100 text-slate-500 px-1 py-0.5 rounded text-[8px] sm:text-[9px] font-black tracking-wider uppercase">{item.unit}</span>
+                                  <span className="text-[8px] sm:text-[9px] text-slate-400 font-medium">Atu: {new Date(item.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                                </div>
                               </div>
+                              <span className={cn(
+                                "shrink-0 px-1.5 py-0.5 rounded-md text-[8px] sm:text-[9px] font-black uppercase tracking-wider",
+                                isLow ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
+                              )}>
+                                {isLow ? 'CRÍTICO' : 'OK'}
+                              </span>
                             </div>
-                            <span className={cn(
-                              "shrink-0 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest",
-                              isLow ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
-                            )}>
-                              {isLow ? 'CRÍTICO' : 'OK'}
-                            </span>
-                          </div>
 
-                          {/* Stats row */}
-                          <div className="grid grid-cols-3 gap-2 pl-2 mb-3">
-                            <div>
-                              <span className="text-[9px] text-slate-400 font-bold uppercase block">Estoque</span>
-                              <span className={cn("text-base font-black font-mono", isLow ? "text-amber-600" : "text-indigo-600")}>
-                                {item.unit === 'un' ? item.currentStock.toFixed(0).padStart(2, '0') : item.currentStock.toFixed(2).replace('.', ',')}
-                              </span>
-                            </div>
-                            <div>
-                              <span className="text-[9px] text-slate-400 font-bold uppercase block">Mínimo</span>
-                              <span className="text-sm font-bold font-mono text-slate-500">
-                                {item.unit === 'un' ? item.minStock.toFixed(0) : item.minStock.toFixed(2).replace('.', ',')}
-                              </span>
-                            </div>
-                            <div>
-                              <span className="text-[9px] text-slate-400 font-bold uppercase block">Custo</span>
-                              <span className="text-sm font-bold font-mono text-slate-600">
-                                {formatCurrency(item.costPrice)}
-                              </span>
+                            {/* Stats row */}
+                            <div className="grid grid-cols-3 gap-1 pl-2 mb-3 text-left">
+                              <div>
+                                <span className="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase block">Estoque</span>
+                                <span className={cn("text-xs sm:text-sm font-black font-mono", isLow ? "text-amber-600" : "text-indigo-600")}>
+                                  {item.unit === 'un' ? item.currentStock.toFixed(0).padStart(2, '0') : item.currentStock.toFixed(2).replace('.', ',')}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase block">Mínimo</span>
+                                <span className="text-xs sm:text-xs font-bold font-mono text-slate-500">
+                                  {item.unit === 'un' ? item.minStock.toFixed(0) : item.minStock.toFixed(2).replace('.', ',')}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase block">Custo</span>
+                                <span className="text-xs sm:text-xs font-bold font-mono text-slate-600 truncate block" title={formatCurrency(item.costPrice)}>
+                                  {formatCurrency(item.costPrice)}
+                                </span>
+                              </div>
                             </div>
                           </div>
 
                           {/* Expiry + Actions row */}
-                          <div className="flex items-center justify-between pl-2">
-                            <div>
+                          <div className="flex flex-wrap items-center justify-between gap-1.5 pl-2 pt-2 border-t border-slate-50">
+                            <div className="min-w-0 flex-1">
                               {item.expiryDate ? (
                                 <span className={cn(
-                                  "text-[10px] font-bold",
+                                  "text-[8px] sm:text-[9px] font-bold block truncate",
                                   isExpired ? "text-red-500" : isExpiringSoon ? "text-amber-500" : "text-slate-500"
                                 )}>
                                   Val: {new Date(item.expiryDate).toLocaleDateString()}
-                                  {isExpired && ' • VENCIDO'}
-                                  {isExpiringSoon && !isExpired && ' • PERTO'}
+                                  {isExpired && ' (V)'}
+                                  {isExpiringSoon && !isExpired && ' (P)'}
                                 </span>
                               ) : (
-                                <span className="text-[9px] text-slate-300 font-bold italic">Sem validade</span>
+                                <span className="text-[8px] sm:text-[9px] text-slate-300 font-bold italic block">Sem val.</span>
                               )}
                             </div>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1 shrink-0">
                               <button 
                                 onClick={() => handleEditClick(item)}
-                                className="bg-slate-50 border border-slate-200 text-slate-500 p-2 rounded-lg active:bg-amber-50 active:text-amber-600 transition-colors"
+                                className="bg-slate-50 border border-slate-200 text-slate-500 p-1.5 rounded-lg active:bg-amber-50 active:text-amber-600 transition-colors"
                               >
-                                <Edit2 size={16} />
+                                <Edit2 size={12} />
                               </button>
                               <button 
                                 onClick={() => handleDelete(item)}
-                                className="bg-slate-50 border border-slate-200 text-slate-500 p-2 rounded-lg active:bg-red-50 active:text-red-600 transition-colors"
+                                className="bg-slate-50 border border-slate-200 text-slate-500 p-1.5 rounded-lg active:bg-red-50 active:text-red-600 transition-colors"
                               >
-                                <Trash2 size={16} />
+                                <Trash2 size={12} />
                               </button>
                             </div>
                           </div>
