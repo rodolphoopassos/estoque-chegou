@@ -410,7 +410,7 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
         {/* Split View for Reposição */}
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row bg-slate-50">
           {/* Left Pane: Alertas de Estoque */}
-          <div className={`w-full lg:w-[35%] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex-col lg:h-full shrink-0 ${
+          <div className={`w-full lg:w-[35%] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex-col lg:h-full lg:shrink-0 min-h-0 ${
             mobilePane === 'alerts' ? 'flex flex-1' : 'hidden lg:flex'
           }`}>
               <div className="p-4 border-b border-slate-100 flex flex-col gap-4 bg-slate-50/50">
@@ -566,7 +566,7 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
             </div>
 
             {/* Right Pane: Carrinho da Compra Atual */}
-            <div className={`w-full lg:w-[65%] flex-col lg:h-full relative shrink-0 ${
+            <div className={`w-full lg:w-[65%] flex-col lg:h-full relative lg:shrink-0 min-h-0 ${
               mobilePane === 'cart' ? 'flex flex-1' : 'hidden lg:flex'
             }`}>
               <div className="p-4 sm:p-6 overflow-y-auto flex-1">
