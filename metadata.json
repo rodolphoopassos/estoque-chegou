@@ -1,0 +1,6 @@
+{
+  "name": "Gourmet Inventory - Pizzaria",
+  "description": "Módulo técnico de controle de estoque baseado no sistema Consumer, com ficha técnica (recipe), decremento automático, e gestão de CMV.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Basic shared logic
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { return id is string && id.size() <= 128; }
+
+    // Produtos (Insumos e Vendas)
+    match /produtos/{document=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Movimentacoes
+    match /movimentacoes/{document=**} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Recipe Categories
+    match /recipeCategories/{id} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+    // Settings
+    match /settings/{id} {
+      allow read, write: if isSignedIn();
+    }
+    
+    // HR & Finance
+    match /transacoes/{id} {
+      allow read, write: if isSignedIn();
+    }
+    match /funcionarios/{id} {
+      allow read, write: if isSignedIn();
+    }
+    match /ponto_diario/{id} {
+      allow read, write: if isSignedIn();
+    }
+    
+    // Cardápio
+    match /cardapio/{id} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Contas a Pagar
+    match /contas_pagar/{id} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Saldos das Contas (Dinheiro, Banco, Cartão)
+    match /saldos_contas/{id} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Configurações & Helpers
+    match /dicionario_insumos/{id} {
+      allow read, write: if isSignedIn();
+    }
+  }
+}

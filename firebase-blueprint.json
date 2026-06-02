@@ -1,0 +1,72 @@
+{
+  "entities": {
+    "Ingredient": {
+      "title": "Insumo",
+      "description": "Matéria-prima utilizada na produção das pizzas.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Nome do insumo (ex: Farinha de Trigo)" },
+        "unit": { "type": "string", "description": "Unidade de medida (kg, g, l, ml, un)" },
+        "currentStock": { "type": "number", "description": "Saldo atual em estoque" },
+        "minStock": { "type": "number", "description": "Nível crítico para alerta" },
+        "costPrice": { "type": "number", "description": "Preço de custo unitário" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "unit", "currentStock", "minStock", "costPrice"]
+    },
+    "Product": {
+      "title": "Produto Finalizado",
+      "description": "Item comercializado (ex: Pizza Grande de Calabresa).",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Nome do produto" },
+        "category": { "type": "string", "description": "Categoria (Pizzas G, Bebidas, etc)" },
+        "salePrice": { "type": "number", "description": "Preço de venda ao consumidor" },
+        "recipe": {
+          "type": "array",
+          "description": "Lista de insumos e quantidades proporcionais"
+        }
+      },
+      "required": ["name", "salePrice", "recipe"]
+    },
+    "Movement": {
+      "title": "Movimentação de Estoque",
+      "description": "Registro de entrada ou saída de mercadorias.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["IN", "OUT", "SALE", "WASTE"] },
+        "date": { "type": "string", "format": "date-time" },
+        "totalCost": { "type": "number" },
+        "description": { "type": "string" }
+      },
+      "required": ["type", "date"]
+    },
+    "RecipeCategory": {
+      "title": "Categoria PDV",
+      "description": "Categoria customizável para produtos.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "required": ["name"]
+    }
+  },
+  "firestore": {
+    "/ingredients": {
+      "schema": "Ingredient",
+      "description": "Catálogo de insumos básicos."
+    },
+    "/products": {
+      "schema": "Product",
+      "description": "Catálogo de produtos com fichas técnicas."
+    },
+    "/movements": {
+      "schema": "Movement",
+      "description": "Histórico de todas as alterações de saldo."
+    },
+    "/recipeCategories": {
+      "schema": "RecipeCategory",
+      "description": "Lista de categorias para produtos."
+    }
+  }
+}
