@@ -425,7 +425,7 @@ export default function App() {
         )}
 
         {/* Content Area */}
-        <div className={cn("flex-1 overflow-y-auto bg-slate-50 pb-20 md:pb-6 p-6 lg:p-8 relative", isMobile && "w-full")}>
+        <div className={cn("flex-1 overflow-y-auto bg-slate-50 pb-24 md:pb-6 p-4 sm:p-6 lg:p-8 relative", isMobile && "w-full")}>
           <ErrorBoundary fallbackMessage="Erro ao carregar este módulo. Tente recarregar a página.">
             <Suspense fallback={
               <div className="flex flex-col items-center justify-center h-64 gap-4">
@@ -474,13 +474,25 @@ export default function App() {
       {/* Mobile Bottom Nav */}
       {isMobile && (
         <nav className="fixed bottom-0 w-full bg-white/95 backdrop-blur-lg border-t border-slate-200 z-50 safe-area-bottom shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.15)]">
-          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-1 py-2 pb-4 gap-0.5">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-1 py-1.5 pb-2 gap-0.5">
+            {/* Nova Compra button in mobile nav */}
+            <button
+              onClick={() => setIsPurchasing(true)}
+              className="snap-center flex flex-col items-center justify-center min-w-[56px] py-1.5 px-1 rounded-xl transition-all shrink-0 text-white"
+            >
+              <div className="bg-indigo-600 rounded-xl p-2 shadow-lg shadow-indigo-200">
+                <PlusCircle size={20} />
+              </div>
+              <span className="text-[7px] uppercase tracking-wider mt-1 text-center leading-tight whitespace-nowrap font-black text-indigo-600">
+                Compra
+              </span>
+            </button>
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id as Tab)}
                 className={cn(
-                  "snap-center flex flex-col items-center justify-center min-w-[60px] py-2 px-1 rounded-xl transition-all shrink-0",
+                  "snap-center flex flex-col items-center justify-center min-w-[56px] py-1.5 px-1 rounded-xl transition-all shrink-0",
                   activeTab === item.id 
                     ? "text-indigo-600" 
                     : "text-slate-400 active:text-slate-600 active:bg-slate-50"
@@ -493,7 +505,7 @@ export default function App() {
                   )}
                 </div>
                 <span className={cn(
-                  "text-[8px] uppercase tracking-wider mt-1 text-center leading-tight whitespace-nowrap",
+                  "text-[7px] uppercase tracking-wider mt-1 text-center leading-tight whitespace-nowrap",
                   activeTab === item.id ? "font-black" : "font-medium"
                 )}>
                   {item.label.length > 10 ? item.label.split(' ')[0] : item.label}

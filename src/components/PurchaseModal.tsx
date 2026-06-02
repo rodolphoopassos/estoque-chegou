@@ -39,6 +39,7 @@ interface PurchaseItem {
 
 import LeitorNfe from "./LeitorNfe";
 import { Camera } from "lucide-react";
+import { useState as useStateReact } from "react";
 
 export default function PurchaseModal({ onClose }: PurchaseModalProps) {
   const { ingredients, addStock, addIngredient, dicionarioInsumos } = useInventory();
@@ -53,6 +54,7 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
   const [showChecklist, setShowChecklist] = useState(false);
   const [paymentSource, setPaymentSource] = useState<'dinheiro' | 'banco' | 'cartao'>('dinheiro');
   const [showLeitorNfe, setShowLeitorNfe] = useState(false);
+  const [mobilePane, setMobilePane] = useState<'alerts' | 'cart'>('cart');
 
   // ========== FUZZY MATCHING HELPERS ==========
   const normalizeText = (text: string): string => {
@@ -349,15 +351,15 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-2 sm:p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl overflow-hidden flex flex-col h-[95vh] animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-end sm:items-center justify-center sm:p-4">
+      <div className="bg-white sm:rounded-2xl shadow-2xl w-full sm:max-w-6xl overflow-hidden flex flex-col h-full sm:h-[95vh] animate-in fade-in zoom-in-95 duration-200 rounded-t-2xl sm:rounded-b-2xl">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
-              <ShoppingBag size={20} />
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="bg-indigo-100 p-1.5 sm:p-2 rounded-lg text-indigo-600">
+              <ShoppingBag size={18} />
             </div>
-            <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">
+            <h2 className="text-base sm:text-xl font-black text-slate-800 uppercase tracking-tight">
               {isCreatingIngredient
                 ? "Cadastrar Novo Insumo"
                 : "Central de Reposição"}
@@ -371,10 +373,46 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
           </button>
         </div>
 
+        {/* Mobile Tab Switcher */}
+        <div className="flex lg:hidden border-b border-slate-200 bg-white shrink-0">
+          <button
+            onClick={() => setMobilePane('alerts')}
+            className={`flex-1 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-1.5 transition-colors border-b-2 ${
+              mobilePane === 'alerts'
+                ? 'text-amber-600 border-amber-500 bg-amber-50/50'
+                : 'text-slate-400 border-transparent'
+            }`}
+          >
+            <AlertTriangle size={14} /> Alertas
+            {lowStockIngredients.length > 0 && (
+              <span className="bg-amber-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full ml-1">
+                {lowStockIngredients.length}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setMobilePane('cart')}
+            className={`flex-1 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-1.5 transition-colors border-b-2 ${
+              mobilePane === 'cart'
+                ? 'text-indigo-600 border-indigo-500 bg-indigo-50/50'
+                : 'text-slate-400 border-transparent'
+            }`}
+          >
+            <ShoppingBag size={14} /> Carrinho
+            {items.length > 0 && (
+              <span className="bg-indigo-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full ml-1">
+                {items.length}
+              </span>
+            )}
+          </button>
+        </div>
+
         {/* Split View for Reposição */}
         <div className="flex-1 overflow-hidden flex flex-col lg:flex-row bg-slate-50">
           {/* Left Pane: Alertas de Estoque */}
-          <div className="w-full lg:w-[35%] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col h-[40vh] lg:h-full shrink-0">
+          <div className={`w-full lg:w-[35%] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col lg:h-full shrink-0 ${
+            mobilePane === 'alerts' ? 'flex-1' : 'hidden lg:flex'
+          }`}>
               <div className="p-4 border-b border-slate-100 flex flex-col gap-4 bg-slate-50/50">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-800 flex items-center gap-2 text-sm uppercase tracking-widest">
@@ -528,10 +566,12 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
             </div>
 
             {/* Right Pane: Carrinho da Compra Atual */}
-            <div className="w-full lg:w-[65%] flex flex-col h-[50vh] lg:h-full relative shrink-0">
-              <div className="p-6 overflow-y-auto flex-1">
+            <div className={`w-full lg:w-[65%] flex flex-col lg:h-full relative shrink-0 ${
+              mobilePane === 'cart' ? 'flex-1' : 'hidden lg:flex'
+            }`}>
+              <div className="p-4 sm:p-6 overflow-y-auto flex-1">
                 {/* Metadata */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-white p-4 rounded-xl border border-slate-200 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-6 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)]">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">
                       Data de Entrada
@@ -732,7 +772,7 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
                             </div>
 
                             {/* Linha 3: Campos numéricos em grid */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
                               {/* Quantidade */}
                               <div className="space-y-1.5">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">
@@ -856,21 +896,23 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
               </div>
 
               {/* Footer Panel do Carrinho */}
-              <div className="px-6 py-4 border-t border-slate-200 bg-white shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] flex flex-col xl:flex-row justify-between items-center gap-4 shrink-0 z-20">
-                <div className="flex flex-col w-full xl:w-auto text-center xl:text-left">
+              <div className={`px-4 sm:px-6 py-3 sm:py-4 border-t border-slate-200 bg-white shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 shrink-0 z-20 safe-area-bottom ${
+                mobilePane !== 'cart' ? 'hidden lg:flex' : ''
+              }`}>
+                <div className="flex flex-col w-full sm:w-auto text-center sm:text-left">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">
                     Valor Total Estimado
                   </span>
-                  <span className="text-3xl font-black font-mono text-indigo-900 leading-none">
+                  <span className="text-2xl sm:text-3xl font-black font-mono text-indigo-900 leading-none">
                     {formatCurrency(calculateTotal())}
                   </span>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+                <div className="flex flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => setShowChecklist(true)}
                     disabled={items.length === 0}
-                    className="px-6 py-3 text-indigo-700 font-bold text-xs uppercase tracking-widest bg-indigo-50 border border-indigo-100 rounded-xl hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2 flex-1 sm:flex-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 sm:px-6 py-3 text-indigo-700 font-bold text-[10px] sm:text-xs uppercase tracking-widest bg-indigo-50 border border-indigo-100 rounded-xl hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2 flex-1 sm:flex-none disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <FileText size={16} /> Gerar Checklist
                   </button>
@@ -878,7 +920,7 @@ export default function PurchaseModal({ onClose }: PurchaseModalProps) {
                     type="button"
                     onClick={handleSubmit}
                     disabled={isSubmitting || items.length === 0 || !items.every(i => i.ingredientId && parseFloat(i.quantity) > 0 && parseFloat(i.costPrice) >= 0 && i.expiryDate !== "")}
-                    className="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-200 transition-all flex-1 sm:flex-none border-b-4 border-emerald-800 active:border-b-0 active:translate-y-1 flex justify-center items-center gap-2"
+                    className="px-4 sm:px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-[10px] sm:text-xs uppercase tracking-widest rounded-xl shadow-lg shadow-emerald-200 transition-all flex-1 sm:flex-none border-b-4 border-emerald-800 active:border-b-0 active:translate-y-1 flex justify-center items-center gap-2"
                   >
                     {isSubmitting ? (
                       "Salvando..."

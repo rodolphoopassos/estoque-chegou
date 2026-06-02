@@ -171,7 +171,7 @@ export default function Inventory() {
         <div className="flex flex-wrap gap-2">
           <button 
             onClick={() => setIsPurchasing(true)}
-            className="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-indigo-700 transition-all font-bold text-[10px] sm:text-xs uppercase tracking-widest shadow-md shadow-indigo-100"
+            className="bg-indigo-600 text-white px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-indigo-700 transition-all font-bold text-[10px] sm:text-xs uppercase tracking-widest shadow-md shadow-indigo-100 flex-1 sm:flex-none justify-center sm:justify-start"
           >
             <Plus size={16} /> Lançar Compras
           </button>
@@ -180,11 +180,11 @@ export default function Inventory() {
               setIsAdding(!isAdding);
               setEditingItem(null);
             }}
-            className="bg-white border border-slate-200 text-slate-600 px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-colors font-bold text-[10px] sm:text-xs uppercase tracking-widest"
+            className="bg-white border border-slate-200 text-slate-600 px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-colors font-bold text-[10px] sm:text-xs uppercase tracking-widest"
           >
-            <Plus size={16} /> Novo Insumo
+            <Plus size={16} /> Novo
           </button>
-          <button className="bg-white border border-slate-200 text-slate-600 px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-colors font-bold text-[10px] sm:text-xs uppercase tracking-widest">
+          <button className="bg-white border border-slate-200 text-slate-600 px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-colors font-bold text-[10px] sm:text-xs uppercase tracking-widest hidden sm:flex">
             <Upload size={16} /> Importar XML
           </button>
         </div>
@@ -276,35 +276,35 @@ export default function Inventory() {
       )}
 
       {/* Filter Bar */}
-      <div className="flex items-center gap-4 bg-white p-3 border border-slate-200 rounded-xl shadow-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 bg-white p-3 border border-slate-200 rounded-xl shadow-sm">
         <div className="flex-1 relative">
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-2.5 text-sm focus:outline-none font-medium text-slate-600" 
-            placeholder="Pesquisar por nome, unidade ou fornecedor..." 
+            placeholder="Pesquisar insumo..." 
           />
         </div>
         <div className="w-px h-6 bg-slate-100 hidden md:block"></div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
           <Filter size={16} className="text-slate-400 hidden sm:block" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-slate-50 border border-slate-200 text-slate-600 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none min-w-[120px] sm:min-w-[140px]"
+            className="bg-slate-50 border border-slate-200 text-slate-600 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none flex-1 sm:flex-none sm:min-w-[140px]"
           >
-            <option value="all">Status de Validade</option>
+            <option value="all">Validade</option>
             <option value="expired">Vencidos</option>
-            <option value="expiringSoon">Próximos a Vencer</option>
+            <option value="expiringSoon">Próximos</option>
             <option value="regular">Regulares</option>
           </select>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-slate-50 border border-slate-200 text-slate-600 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none min-w-[120px] sm:min-w-[140px]"
+            className="bg-slate-50 border border-slate-200 text-slate-600 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none flex-1 sm:flex-none sm:min-w-[140px]"
           >
-            <option value="all">Todas as Categorias</option>
+            <option value="all">Categorias</option>
             <option value="gelados">Gelados/Bebidas</option>
             <option value="laticinios">Laticínios</option>
             <option value="frios">Frios/Carnes</option>
@@ -315,20 +315,21 @@ export default function Inventory() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+      {/* Desktop Table + Mobile Cards */}
+      {/* Desktop: Table view */}
+      <div className="hidden sm:block bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] md:min-w-[800px] text-sm text-left">
+          <table className="w-full min-w-[800px] text-sm text-left">
             <thead className="bg-slate-50 border-b border-slate-100 text-[10px] whitespace-nowrap font-black text-slate-400 uppercase tracking-[0.1em]">
               <tr>
-                <th className="px-4 sm:px-8 py-4 sm:py-5">Insumo / Categoria</th>
-                <th className="px-4 sm:px-8 py-4 sm:py-5 hidden sm:table-cell">Validade</th>
-                <th className="px-4 sm:px-8 py-4 sm:py-5">U.M.</th>
-                <th className="px-4 sm:px-8 py-4 sm:py-5 text-right hidden md:table-cell">Custo Médio</th>
-                <th className="px-4 sm:px-8 py-4 sm:py-5 text-right">Saldo Logico</th>
-                <th className="px-4 sm:px-8 py-4 sm:py-5 text-right hidden md:table-cell">Custo Total</th>
-                <th className="px-4 sm:px-8 py-4 sm:py-5">Status</th>
-                <th className="px-4 sm:px-8 py-4 sm:py-5 text-right hidden sm:table-cell">Ações</th>
+                <th className="px-6 py-4">Insumo / Categoria</th>
+                <th className="px-6 py-4">Validade</th>
+                <th className="px-6 py-4">U.M.</th>
+                <th className="px-6 py-4 text-right">Custo Médio</th>
+                <th className="px-6 py-4 text-right">Saldo Logico</th>
+                <th className="px-6 py-4 text-right">Custo Total</th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4 text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -338,8 +339,7 @@ export default function Inventory() {
                 </tr>
               ) : filtered.length > 0 ? (
                 Object.entries(groupedItems).map(([category, items]) => {
-                  const isExpanded = expandedCategories[category] !== false; // expanded by default
-
+                  const isExpanded = expandedCategories[category] !== false;
                   return (
                     <React.Fragment key={category}>
                       <tr 
@@ -358,27 +358,22 @@ export default function Inventory() {
                           </div>
                         </td>
                       </tr>
-                      
                       {isExpanded && items.map(item => {
                         const isLow = item.currentStock <= item.minStock;
                         const expiry = item.expiryDate ? new Date(item.expiryDate) : null;
                         const isExpired = expiry && expiry < new Date();
-                        const isExpiringSoon = expiry && (expiry.getTime() - new Date().getTime()) < (3 * 24 * 60 * 60 * 1000); // 3 days
-
+                        const isExpiringSoon = expiry && (expiry.getTime() - new Date().getTime()) < (3 * 24 * 60 * 60 * 1000);
                         return (
                           <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
-                            <td className="px-4 sm:px-8 py-3 sm:py-4">
-                              <div className="font-bold text-slate-800 text-xs sm:text-sm">{item.name}</div>
+                            <td className="px-6 py-4">
+                              <div className="font-bold text-slate-800 text-sm">{item.name}</div>
                               <div className="flex items-center gap-2 mt-1">
                                 <span className="text-[9px] text-slate-400 font-medium">Atu: {new Date(item.lastUpdated || Date.now()).toLocaleDateString()}</span>
                               </div>
                             </td>
-                            <td className="px-4 sm:px-8 py-3 sm:py-4 hidden sm:table-cell">
+                            <td className="px-6 py-4">
                               {item.expiryDate ? (
-                                <div className={cn(
-                                  "flex flex-col",
-                                  isExpired ? "text-red-500" : isExpiringSoon ? "text-amber-500" : "text-slate-600"
-                                )}>
+                                <div className={cn("flex flex-col", isExpired ? "text-red-500" : isExpiringSoon ? "text-amber-500" : "text-slate-600")}>
                                   <span className="text-[10px] font-black uppercase italic tracking-tighter">
                                     {new Date(item.expiryDate).toLocaleDateString()}
                                   </span>
@@ -390,10 +385,10 @@ export default function Inventory() {
                                 <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">Não espec.</span>
                               )}
                             </td>
-                            <td className="px-4 sm:px-8 py-3 sm:py-4">
+                            <td className="px-6 py-4">
                               <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[10px] font-black tracking-widest uppercase">{item.unit}</span>
                             </td>
-                            <td className="px-4 sm:px-8 py-3 sm:py-4 text-right font-mono font-bold text-slate-600 hidden md:table-cell">
+                            <td className="px-6 py-4 text-right font-mono font-bold text-slate-600">
                               <InlineEditField 
                                 value={item.costPrice} 
                                 onSave={(val) => updateIngredient(item.id!, { costPrice: val })}
@@ -401,10 +396,7 @@ export default function Inventory() {
                                 className="w-full"
                               />
                             </td>
-                            <td className={cn(
-                              "px-4 sm:px-8 py-3 sm:py-4 text-right font-mono font-black text-base sm:text-lg",
-                              isLow ? "text-amber-600" : "text-indigo-600"
-                            )}>
+                            <td className={cn("px-6 py-4 text-right font-mono font-black text-lg", isLow ? "text-amber-600" : "text-indigo-600")}>
                               <InlineEditField 
                                 value={item.currentStock} 
                                 onSave={(val) => updateIngredient(item.id!, { currentStock: val })}
@@ -412,18 +404,18 @@ export default function Inventory() {
                                 className="w-full"
                               />
                             </td>
-                            <td className="px-4 sm:px-8 py-3 sm:py-4 text-right font-mono font-bold text-slate-500 hidden md:table-cell">
+                            <td className="px-6 py-4 text-right font-mono font-bold text-slate-500">
                               {formatCurrency(item.costPrice * item.currentStock)}
                             </td>
-                            <td className="px-4 sm:px-8 py-3 sm:py-4">
+                            <td className="px-6 py-4">
                               <span className={cn(
-                                "px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest",
+                                "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
                                 isLow ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
                               )}>
                                 {isLow ? 'CRÍTICO' : 'NORMAL'}
                               </span>
                             </td>
-                            <td className="px-4 sm:px-8 py-3 sm:py-4 text-right hidden sm:table-cell">
+                            <td className="px-6 py-4 text-right">
                               <div className="flex items-center justify-end gap-2">
                                 <button 
                                   onClick={() => handleEditClick(item)}
@@ -455,6 +447,135 @@ export default function Inventory() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile: Card view */}
+      <div className="sm:hidden space-y-3">
+        {loading ? (
+          <div className="bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-400 animate-pulse font-medium">
+            Sincronizando banco de dados...
+          </div>
+        ) : filtered.length > 0 ? (
+          Object.entries(groupedItems).map(([category, items]) => {
+            const isExpanded = expandedCategories[category] !== false;
+            return (
+              <div key={category}>
+                {/* Category Header */}
+                <button
+                  onClick={() => setExpandedCategories(prev => ({ ...prev, [category]: !isExpanded }))}
+                  className="w-full flex items-center gap-2 px-3 py-2.5 bg-slate-100 rounded-lg mb-2 active:bg-slate-200 transition-colors"
+                >
+                  {isExpanded ? <ChevronDown size={16} className="text-slate-400" /> : <ChevronRight size={16} className="text-slate-400" />}
+                  <span className="font-bold text-slate-700 uppercase tracking-wider text-xs flex-1 text-left">
+                    {categoryNames[category] || category}
+                  </span>
+                  <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                    {items.length}
+                  </span>
+                </button>
+
+                {isExpanded && (
+                  <div className="space-y-2">
+                    {items.map(item => {
+                      const isLow = item.currentStock <= item.minStock;
+                      const expiry = item.expiryDate ? new Date(item.expiryDate) : null;
+                      const isExpired = expiry && expiry < new Date();
+                      const isExpiringSoon = expiry && (expiry.getTime() - new Date().getTime()) < (3 * 24 * 60 * 60 * 1000);
+
+                      return (
+                        <div key={item.id} className={cn(
+                          "bg-white border rounded-xl p-3.5 shadow-sm relative overflow-hidden",
+                          isLow ? "border-amber-200" : "border-slate-200"
+                        )}>
+                          {/* Colored left bar */}
+                          <div className={cn(
+                            "absolute left-0 top-0 bottom-0 w-1 rounded-l-xl",
+                            isLow ? "bg-amber-400" : "bg-emerald-400"
+                          )} />
+
+                          {/* Top row: Name + Status */}
+                          <div className="flex justify-between items-start mb-3 pl-2">
+                            <div className="flex-1 min-w-0 pr-2">
+                              <h4 className="font-bold text-slate-800 text-sm leading-tight truncate">{item.name}</h4>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <span className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-[9px] font-black tracking-widest uppercase">{item.unit}</span>
+                                <span className="text-[9px] text-slate-400 font-medium">Atu: {new Date(item.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                              </div>
+                            </div>
+                            <span className={cn(
+                              "shrink-0 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest",
+                              isLow ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
+                            )}>
+                              {isLow ? 'CRÍTICO' : 'OK'}
+                            </span>
+                          </div>
+
+                          {/* Stats row */}
+                          <div className="grid grid-cols-3 gap-2 pl-2 mb-3">
+                            <div>
+                              <span className="text-[9px] text-slate-400 font-bold uppercase block">Estoque</span>
+                              <span className={cn("text-base font-black font-mono", isLow ? "text-amber-600" : "text-indigo-600")}>
+                                {item.unit === 'un' ? item.currentStock.toFixed(0).padStart(2, '0') : item.currentStock.toFixed(2).replace('.', ',')}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-[9px] text-slate-400 font-bold uppercase block">Mínimo</span>
+                              <span className="text-sm font-bold font-mono text-slate-500">
+                                {item.unit === 'un' ? item.minStock.toFixed(0) : item.minStock.toFixed(2).replace('.', ',')}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-[9px] text-slate-400 font-bold uppercase block">Custo</span>
+                              <span className="text-sm font-bold font-mono text-slate-600">
+                                {formatCurrency(item.costPrice)}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Expiry + Actions row */}
+                          <div className="flex items-center justify-between pl-2">
+                            <div>
+                              {item.expiryDate ? (
+                                <span className={cn(
+                                  "text-[10px] font-bold",
+                                  isExpired ? "text-red-500" : isExpiringSoon ? "text-amber-500" : "text-slate-500"
+                                )}>
+                                  Val: {new Date(item.expiryDate).toLocaleDateString()}
+                                  {isExpired && ' • VENCIDO'}
+                                  {isExpiringSoon && !isExpired && ' • PERTO'}
+                                </span>
+                              ) : (
+                                <span className="text-[9px] text-slate-300 font-bold italic">Sem validade</span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <button 
+                                onClick={() => handleEditClick(item)}
+                                className="bg-slate-50 border border-slate-200 text-slate-500 p-2 rounded-lg active:bg-amber-50 active:text-amber-600 transition-colors"
+                              >
+                                <Edit2 size={16} />
+                              </button>
+                              <button 
+                                onClick={() => handleDelete(item)}
+                                className="bg-slate-50 border border-slate-200 text-slate-500 p-2 rounded-lg active:bg-red-50 active:text-red-600 transition-colors"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <div className="bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-400 italic font-medium">
+            Nenhum insumo encontrado.
+          </div>
+        )}
       </div>
 
       {/* Delete Modal */}
